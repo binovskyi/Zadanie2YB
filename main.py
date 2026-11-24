@@ -17,11 +17,10 @@ def generuj_hmotnosti(n=POCET):
 def zorad(hodnoty):
     return sorted(hodnoty)
 
-def priemer(hodnoty):
-    return sum(hodnoty) / len(hodnoty)
-
 def sila(hmotnost):
+    """F = m * g"""
     return hmotnost * G
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -35,7 +34,7 @@ class App(tk.Tk):
 
         self._vytvor_gui()
         self.generuj()
-
+        
     def _vytvor_gui(self):
         panel = ttk.Frame(self, padding=10, width=320)
         panel.pack(side="left", fill="y")
@@ -49,20 +48,17 @@ class App(tk.Tk):
         ttk.Button(panel, text="Generovať nové hodnoty",
                    command=self.generuj).grid(row=1, column=0, columnspan=2,
                                               sticky="ew", pady=(0, 15))
+
         self.v_min_m = tk.StringVar()
         self.v_max_m = tk.StringVar()
-        self.v_avg_m = tk.StringVar()
         self.v_min_f = tk.StringVar()
         self.v_max_f = tk.StringVar()
-        self.v_avg_f = tk.StringVar()
 
         riadky = [
             ("Min. hmotnosť:", self.v_min_m),
             ("Max. hmotnosť:", self.v_max_m),
-            ("Priem. hmotnosť:", self.v_avg_m),
             ("Min. sila:", self.v_min_f),
             ("Max. sila:", self.v_max_f),
-            ("Priem. sila:", self.v_avg_f),
         ]
         for i, (text, var) in enumerate(riadky, start=2):
             ttk.Label(panel, text=text, width=16, anchor="w").grid(
@@ -70,20 +66,20 @@ class App(tk.Tk):
             ttk.Label(panel, textvariable=var, width=14, anchor="w",
                       font=("Arial", 10, "bold")).grid(row=i, column=1, sticky="w", pady=2)
 
-        ttk.Separator(panel).grid(row=8, column=0, columnspan=2, sticky="ew", pady=15)
+        ttk.Separator(panel).grid(row=6, column=0, columnspan=2, sticky="ew", pady=15)
 
         ttk.Label(panel, text="Zadaj hmotnosť [kg]:").grid(
-            row=9, column=0, columnspan=2, sticky="w")
+            row=7, column=0, columnspan=2, sticky="w")
         self.vstup = ttk.Entry(panel, width=20)
-        self.vstup.grid(row=10, column=0, sticky="ew", pady=5)
+        self.vstup.grid(row=8, column=0, sticky="ew", pady=5)
         self.vstup.bind("<Return>", lambda e: self.vypocitaj())
         ttk.Button(panel, text="Vypočítať F",
-                   command=self.vypocitaj).grid(row=10, column=1, sticky="ew",
+                   command=self.vypocitaj).grid(row=8, column=1, sticky="ew",
                                                 padx=(5, 0), pady=5)
 
         self.v_vysledok = tk.StringVar(value="F = –")
         ttk.Label(panel, textvariable=self.v_vysledok, width=32, anchor="w",
-                  font=("Arial", 11, "bold")).grid(row=11, column=0, columnspan=2,
+                  font=("Arial", 11, "bold")).grid(row=9, column=0, columnspan=2,
                                                    sticky="w", pady=5)
 
         panel.columnconfigure(0, weight=1)
@@ -106,10 +102,8 @@ class App(tk.Tk):
         f = zorad(self.sily)
         self.v_min_m.set(f"{m[0]:.2f} kg")
         self.v_max_m.set(f"{m[-1]:.2f} kg")
-        self.v_avg_m.set(f"{priemer(m):.2f} kg")
         self.v_min_f.set(f"{f[0]:.2f} N")
         self.v_max_f.set(f"{f[-1]:.2f} N")
-        self.v_avg_f.set(f"{priemer(f):.2f} N")
 
     def _nakresli_graf(self):
         self.ax1.clear()
@@ -144,7 +138,6 @@ class App(tk.Tk):
             messagebox.showerror("Chyba", "Zadaj platné číslo (napr. 12.5).")
             return
         self.v_vysledok.set(f"F = {sila(m):.2f} N")
-
 
 if __name__ == "__main__":
     App().mainloop()
