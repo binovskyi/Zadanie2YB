@@ -18,7 +18,6 @@ def zorad(hodnoty):
     return sorted(hodnoty)
 
 def sila(hmotnost):
-    """F = m * g"""
     return hmotnost * G
 
 
