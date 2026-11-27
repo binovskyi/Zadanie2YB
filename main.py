@@ -1,3 +1,4 @@
+import math
 import random
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -18,6 +19,7 @@ def zorad(hodnoty):
     return sorted(hodnoty)
 
 def sila(hmotnost):
+    """F = m * g"""
     return hmotnost * G
 
 
@@ -33,8 +35,9 @@ class App(tk.Tk):
 
         self._vytvor_gui()
         self.generuj()
-        
+
     def _vytvor_gui(self):
+        # ľavý panel s pevnou šírkou, aby sa nič nehýbalo
         panel = ttk.Frame(self, padding=10, width=320)
         panel.pack(side="left", fill="y")
         panel.pack_propagate(False)
@@ -135,6 +138,12 @@ class App(tk.Tk):
             m = float(text)
         except ValueError:
             messagebox.showerror("Chyba", "Zadaj platné číslo (napr. 12.5).")
+            return
+        if not math.isfinite(m):
+            messagebox.showerror("Chyba", "Zadaj platné číslo (napr. 12.5).")
+            return
+        if m <= 0:
+            messagebox.showerror("Chyba", "Hmotnosť musí byť väčšia ako 0.")
             return
         self.v_vysledok.set(f"F = {sila(m):.2f} N")
 
